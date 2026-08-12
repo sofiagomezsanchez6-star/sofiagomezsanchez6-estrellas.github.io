@@ -1,0 +1,52 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+import siteConfig from "../../site.config";
+import ArrowRight from "../../icons/ArrowRight.astro";
+
+const evidencias = siteConfig.evidencias || [];
+---
+
+<MainLayout activePage="evidencias" pageTitle={siteConfig.title + " | Evidencias"}>
+  <div class="page-content">
+    <h1 class="sigmar-ff text-balance">Evidencias</h1>
+    <p class="kanit-light text-balance mb-8">
+      Aquí encontrarás las evidencias del proyecto, organizadas por etapa.
+    </p>
+
+    <nav class="evidencias-menu flex flex-col gap-4 w-full text-left">
+      {
+        evidencias.map((item) => (
+          <a
+            href={item.href}
+            class="evidencia-item flex items-center justify-between gap-4 rounded-2xl px-6 py-4 border border-space-red/40 dark:border-space-yellow/40"
+          >
+            <div>
+              <h2 class="sigmar-ff text-lg pt-0! pb-0!">{item.text}</h2>
+              {item.description && (
+                <p class="kanit-light text-sm mt-1 opacity-80">
+                  {item.description}
+                </p>
+              )}
+            </div>
+            <ArrowRight class="w-5 h-5 fill-current shrink-0" />
+          </a>
+        ))
+      }
+    </nav>
+  </div>
+</MainLayout>
+
+<style>
+  .evidencia-item {
+    transition: transform 0.15s ease, background-color 0.15s ease;
+  }
+  .evidencia-item:hover {
+    transform: translateX(4px);
+  }
+  html.light .evidencia-item:hover {
+    background-color: rgba(144, 57, 58, 0.06);
+  }
+  html.dark .evidencia-item:hover {
+    background-color: rgba(255, 255, 133, 0.06);
+  }
+</style>

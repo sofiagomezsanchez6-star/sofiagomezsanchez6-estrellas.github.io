@@ -1,0 +1,35 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+import siteConfig from "../../site.config";
+import { withBase } from "../../utils/helpers";
+---
+
+<MainLayout activePage="evidencias" pageTitle={siteConfig.title + " | Evidencias · SQL"}>
+  <div class="page-content">
+    <a href={withBase("/evidencias")} class="kanit-light text-sm">&larr; Volver a Evidencias</a>
+    <h1 class="sigmar-ff text-balance">SQL</h1>
+    <p class="kanit-light text-balance">
+      Próximamente: scripts de creación de tablas, inserciones y consultas SQL
+      desarrolladas para el proyecto.
+    </p>
+    <div class="placeholder-box kanit-light">
+      Esta sección está vacía por ahora. Puedes pegar tus consultas dentro de un
+      bloque <code>&lt;pre&gt;&lt;code&gt;</code> o enlazar tus archivos .sql cuando
+      estén listos.
+    </div>
+  </div>
+</MainLayout>
+
+<style>
+  .placeholder-box {
+    margin-top: 2rem;
+    border: 2px dashed var(--space-red);
+    border-radius: 1rem;
+    padding: 2rem;
+    text-align: left;
+    opacity: 0.8;
+  }
+  html.dark .placeholder-box {
+    border-color: var(--space-yellow);
+  }
+</style>

@@ -1,0 +1,34 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+import siteConfig from "../../site.config";
+import { withBase } from "../../utils/helpers";
+---
+
+<MainLayout activePage="evidencias" pageTitle={siteConfig.title + " | Evidencias · Normalización"}>
+  <div class="page-content">
+    <a href={withBase("/evidencias")} class="kanit-light text-sm">&larr; Volver a Evidencias</a>
+    <h1 class="sigmar-ff text-balance">Normalización</h1>
+    <p class="kanit-light text-balance">
+      Próximamente: evidencias del proceso de normalización (1FN, 2FN, 3FN...)
+      aplicado a la base de datos del proyecto.
+    </p>
+    <div class="placeholder-box kanit-light">
+      Esta sección está vacía por ahora. Agrega aquí tus imágenes, capturas o
+      archivos cuando tengas listas tus evidencias.
+    </div>
+  </div>
+</MainLayout>
+
+<style>
+  .placeholder-box {
+    margin-top: 2rem;
+    border: 2px dashed var(--space-red);
+    border-radius: 1rem;
+    padding: 2rem;
+    text-align: left;
+    opacity: 0.8;
+  }
+  html.dark .placeholder-box {
+    border-color: var(--space-yellow);
+  }
+</style>

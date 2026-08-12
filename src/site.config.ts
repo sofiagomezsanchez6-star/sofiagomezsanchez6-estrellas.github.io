@@ -24,6 +24,19 @@ export type About = {
     text?: string;
 };
 
+export type Presentation = {
+    title?: string;
+    text?: string;
+    videoUrl?: string;
+    avatar?: Image;
+};
+
+export type EvidenceItem = {
+    text: string;
+    href: string;
+    description?: string;
+};
+
 export type Blog = {
     description?: string;
 };
@@ -59,6 +72,8 @@ export type SiteConfig = {
     socialLinks?: Link[];
     hero?: Hero;
     about?: About;
+    presentation?: Presentation;
+    evidencias?: EvidenceItem[];
     contactInfo?: ContactInfo;
     subscribe?: Subscribe;
     blog?: Blog;
@@ -68,9 +83,9 @@ export type SiteConfig = {
 };
 
 const siteConfig: SiteConfig = {
-    website: 'https://example.com',
-    title: 'Space Ahead',
-    description: 'A minimal space-inspired personal blog template built with Astro.js and Tailwind CSS, by Siddhesh Thadeshwar',
+    website: 'https://sofiagomezsanchez6-estrellas.github.io',
+    title: 'Sofía Gómez Sánchez',
+    description: 'Sitio personal de Sofía Gómez Sánchez con la presentación del proyecto y las evidencias de modelado, normalización, SQL y proyecto.',
     image: {
         src: '/space-ahead-preview.jpeg',
         alt: 'Space Ahead ✨ - A minimal space-inspired personal blog template, created by Siddhesh Thadeshwar.'
@@ -79,6 +94,14 @@ const siteConfig: SiteConfig = {
         {
             text: 'Home',
             href: withBase('/')
+        },
+        {
+            text: 'Presentación',
+            href: withBase('/presentacion')
+        },
+        {
+            text: 'Evidencias',
+            href: withBase('/evidencias')
         },
         {
             text: 'Blog',
@@ -98,6 +121,14 @@ const siteConfig: SiteConfig = {
         }
     ],
     footerNavLinks: [
+        {
+            text: 'Presentación',
+            href: withBase('/presentacion')
+        },
+        {
+            text: 'Evidencias',
+            href: withBase('/evidencias')
+        },
         {
             text: 'About',
             href: withBase('/about')
@@ -130,28 +161,60 @@ const siteConfig: SiteConfig = {
         }
     ],
     hero: {
-        eyebrowText: 'Galaxy of Adventures',
-        title: 'Space Ahead ✨',
-        text: "Written by Astro-naut Sid, a space explorer at Beyond Earth.",
+        eyebrowText: 'Proyecto de Base de Datos',
+        title: 'Sofía Gómez Sánchez ✨',
+        text: "Bienvenido a mi sitio. Aquí encontrarás mi presentación y las evidencias de mi proyecto de base de datos.",
         image: {
             src: '/assets/images/pixeltrue-space-discovery.svg',
             alt: 'A person sitting at a desk in front of a computer'
         },
         actions: [
             {
-                text: 'Read Now',
-                href: withBase('/blog')
+                text: 'Ver Presentación',
+                href: withBase('/presentacion')
             },
             {
-                text: 'Subscribe',
-                href: '#subscribe'
+                text: 'Ver Evidencias',
+                href: withBase('/evidencias')
             }
         ]
     },
     about: {
         title: 'About',
-        text: 'Space Ahead is a blog about space exploration and travel. It is written by Astro-naut Sid, a space explorer at Beyond Earth. Sid is known for his love of adventure and his insatiable curiosity about the universe. He has explored countless planets, discovered new life forms, and made friends with aliens along the way. 🚀',
+        text: 'Soy Sofía Gómez Sánchez. Este sitio reúne la presentación y las evidencias de mi proyecto de base de datos: modelado, normalización, SQL y el proyecto final. Reemplaza este texto en src/site.config.ts con tu propia biografía. 🚀',
     },
+    presentation: {
+        title: 'Presentación',
+        text: 'Hola, soy Sofía Gómez Sánchez. En este video te cuento quién soy y en qué consiste este proyecto. Reemplaza este texto, el video y la foto con tu propio contenido en src/site.config.ts.',
+        // Reemplaza esta URL por el enlace "embed" de tu video (YouTube, Drive, etc.)
+        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+        avatar: {
+            src: '/assets/images/avatar-placeholder.svg',
+            alt: 'Foto de perfil de Sofía Gómez Sánchez'
+        }
+    },
+    evidencias: [
+        {
+            text: 'Modelado',
+            href: withBase('/evidencias/modelado'),
+            description: 'Diagramas y evidencias del modelado de datos (entidad-relación, modelo lógico, etc.)'
+        },
+        {
+            text: 'Normalización',
+            href: withBase('/evidencias/normalizacion'),
+            description: 'Proceso de normalización de la base de datos (1FN, 2FN, 3FN...)'
+        },
+        {
+            text: 'SQL',
+            href: withBase('/evidencias/sql'),
+            description: 'Scripts y consultas SQL desarrolladas para el proyecto.'
+        },
+        {
+            text: 'Proyecto',
+            href: withBase('/evidencias/proyecto'),
+            description: 'Entregable final y documentación general del proyecto.'
+        }
+    ],
     contactInfo: {
         title: 'Contact',
         text: "Hi! Whether you have a question, a suggestion, or just want to share your thoughts, I'm all ears. Feel free to get in touch through any of the methods below:",
