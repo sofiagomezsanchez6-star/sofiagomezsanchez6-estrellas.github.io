@@ -7,8 +7,8 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://sofiagomezsanchez6-star.github.io",
-  base: "/sofiagomezsanchez6-estrellas.github.io",
+  site: "https://sofiagomezsanchez6-estrellas.github.io",
+  base: "/",
 
   integrations: [
     swup({
