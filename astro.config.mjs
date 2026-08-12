@@ -7,7 +7,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "http://localhost:4321", //"https://djsiddz.github.io",
+  site: "http://sofiagomezsanchez6-estrellas.github.io", //"https://djsiddz.github.io",
   base: "/space-ahead",
   integrations: [
     swup({
