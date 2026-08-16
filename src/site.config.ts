@@ -77,12 +77,12 @@ const siteConfig: SiteConfig = {
         }
     ],
     hero: {
-        eyebrowText: 'Galaxy of Adventures',
-        title: 'Space Ahead ✨',
-        text: "Bienvenido a mi sitio. Aquí encontrarás mi presentación y las evidencias de mi proyecto.",
+        eyebrowText: 'Portafolio Melany Gómez',
+        title: 'Portafolio ✨',
+        text: "Bienvenido a mi sitio. Aquí encontrarás mi presentación y las evidencias de la clase Base de Datos 1.",
         image: {
             src: '/assets/images/pixeltrue-space-discovery.svg',
-            alt: 'A person sitting at a desk in front of a computer'
+            alt: ''
         },
         actions: [
             {
@@ -97,24 +97,24 @@ const siteConfig: SiteConfig = {
     },
     presentation: {
         title: 'Presentación',
-        text: 'Hola, soy Sofía Gómez Sánchez. En este video te cuento quién soy y en qué consiste este proyecto. Reemplaza este texto, el video y la foto con tu propio contenido en src/site.config.ts.',
+        text: 'Hola, soy Melany Gómez. En este video encontraras una breve presentación sobre mi. ',
         // Reemplaza esta URL por el enlace "embed" de tu video (YouTube, Drive, etc.)
         videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
         avatar: {
-            src: '/assets/images/avatar-placeholder.svg',
-            alt: 'Foto de perfil de Sofía Gómez Sánchez'
+            src: '/assets/images/sofia.jpg',
+            alt: 'Foto de perfil de Melany Gómez'
         }
     },
     evidencias: [
         {
             text: 'Modelado',
             href: withBase('/evidencias/modelado'),
-            description: 'Diagramas y evidencias del modelado de datos (entidad-relación, modelo lógico, etc.)'
+            description: 'Diagramas y evidencias del modelado de datos'
         },
         {
             text: 'Normalización',
             href: withBase('/evidencias/normalizacion'),
-            description: 'Proceso de normalización de la base de datos (1FN, 2FN, 3FN...)'
+            description: 'Proceso de normalización de la base de datos'
         },
         {
             text: 'SQL',
