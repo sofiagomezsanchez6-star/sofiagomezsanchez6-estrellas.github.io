@@ -7,8 +7,8 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://sofiagomezsanchez6-estrellas.github.io",
-  base: "/",
+  site: "https://sofiagomezsanchez6-star.github.io",
+  base: "/sofiagomezsanchez6-estrellas.github.io",
 
   integrations: [
     swup({
@@ -32,10 +32,3 @@ export default defineConfig({
     svgOptimizer: svgoOptimizer(),
   },
 });
-
-//swup theme variations:
-// theme: "fade"
-// theme: ["overlay", { direction: "to-top"}]
-//
-// for overlay and fade, further customization can be done in animate.css file
-// To know about swup, visit https://swup.js.org/

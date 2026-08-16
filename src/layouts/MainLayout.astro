@@ -1,6 +1,4 @@
 ---
-import "../styles/global.css";
-
 import Footer from "../components/Footer.astro";
 import Nav from "../components/Nav.astro";
 import { withBase } from "../utils/helpers";
@@ -16,10 +14,14 @@ const { pageTitle, activePage } = Astro.props as LayoutProps;
 <html lang="es" class="antialiased break-words">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href={withBase(`/space-ahead-logo.png`)} />
+    <link rel="icon" href={withBase("/space-ahead-logo.png")} />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <link rel="sitemap" href={withBase(`/sitemap-index.xml`)} />
+    <link rel="sitemap" href={withBase("/sitemap-index.xml")} />
+    
+    <!-- Hoja de estilos vinculada correctamente con base path -->
+    <link rel="stylesheet" href={withBase("/src/styles/global.css")} />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
