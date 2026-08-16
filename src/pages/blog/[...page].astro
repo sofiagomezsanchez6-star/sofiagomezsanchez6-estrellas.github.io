@@ -1,36 +1,31 @@
 ---
-import type { GetStaticPathsOptions, Page } from "astro";
-import { type CollectionEntry, getCollection } from "astro:content";
-import Pagination from "../../components/Pagination.astro";
+import { getCollection } from "astro:content";
 import { sortItemsByDateDesc } from "../../utils/helpers";
-import MainLayout from "../../layouts/MainLayout.astro";
+import type { GetStaticPathsOptions, Page } from "astro";
 import siteConfig from "../../site.config";
-import PostCardPreview from "../../components/PostCardPreview.astro";
+import type { CollectionEntry } from "astro:content";
+import MainLayout from "../../layouts/MainLayout.astro";
+import Pagination from "../../components/Pagination.astro";
+import PostListPreview from "../../components/PostListPreview.astro";
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
-  const blogs = (await getCollection("blogs")).sort(sortItemsByDateDesc);
-  return paginate(blogs, { pageSize: siteConfig.postsPerPage || 2 });
+  const posts = (await getCollection("blogs")).sort(sortItemsByDateDesc);
+  return paginate(posts, { pageSize: siteConfig.postsPerPage || 2 });
 }
 
 type Props = { page: Page<CollectionEntry<"blogs">> };
 
 const { page } = Astro.props;
-const allPosts = page.data;
+const posts = page?.data ? page.data.filter(Boolean) : [];
 ---
 
-<MainLayout activePage="blog" pageTitle={siteConfig.title + " | Blog Archive"}>
-  <div class="page-content py-8 text-center">
-    <h1 class="sigmar-ff">Blog</h1>
-    {
-      siteConfig.blog?.description && (
-        <p class="font-light text-balance">{siteConfig.blog?.description}</p>
-      )
-    }
-
-    <div
-      class="flex flex-col text-left gap-8 mb-4 text-sm sm:text-base max-w-fit mx-auto"
-    >
-      {allPosts.map((post) => <PostCardPreview post={post} />)}
+<MainLayout pageTitle={siteConfig.title + " | Blog"}>
+  <div class="page-content">
+    <h1 class="sigmar-ff text-center">Blog</h1>
+    <div class="flex flex-col gap-8 max-w-full text-left mt-3">
+      {posts.map((post) => (
+        <PostListPreview post={post} />
+      ))}
     </div>
     <Pagination page={page} class="mb-16 sm:mb-24" />
   </div>
