@@ -1,21 +1,12 @@
 ---
-import { getCollection } from "astro:content";
 import MainLayout from "../layouts/MainLayout.astro";
 import siteConfig from "../site.config";
-import { sortItemsByDateDesc, withBase } from "../utils/helpers";
-import PostCardPreview from "../components/PostCardPreview.astro";
 import Button from "../components/Button.astro";
 import { Image } from "astro:assets";
 import heroImage from "../assets/images/pixeltrue-space-discovery.svg";
-import ArrowRight from "../icons/ArrowRight.astro";
-
-const allPosts = (await getCollection("blogs")).sort(sortItemsByDateDesc);
 ---
 
-<MainLayout
-  activePage="home"
-  pageTitle={siteConfig.title}
->
+<MainLayout activePage="home" pageTitle={siteConfig.title}>
   <div
     class="jumbo-banner flex flex-col sm:flex-row sm:items-center sm:justify-between w-full px-4 my-12 gap-6"
   >
@@ -49,7 +40,6 @@ const allPosts = (await getCollection("blogs")).sort(sortItemsByDateDesc);
       </div>
     </div>
     <div class="w-full sm:w-fit sm:max-w-1/2">
-      <!-- {siteConfig.hero?.image && <Image src={siteConfig.hero?.image?.src} alt={siteConfig.hero?.image?.alt || ""} inferSize={true} />} -->
       <Image
         class="cover-img"
         src={heroImage}
@@ -57,21 +47,6 @@ const allPosts = (await getCollection("blogs")).sort(sortItemsByDateDesc);
         width={400}
         height={300}
       />
-    </div>
-  </div>
-  <div class="page-content">
-    <div id="posts" class="flex flex-col items-center justify-center w-full">
-      <h2 class="sigmar-ff text-balance pt-0! pb-8!">Recent Stories</h2>
-      <div class="flex flex-col gap-8 max-w-full text-left">
-        {
-          allPosts
-            .slice(0, siteConfig.recentPostLimit)
-            .map((post) => <PostCardPreview post={post} />)
-        }
-      </div>
-      <Button href={withBase("/blog")} class="space-btn-filled mt-8">
-        View All Posts <ArrowRight class="w-5 h-5 fill-current ml-4" />
-      </Button>
     </div>
   </div>
 </MainLayout>

@@ -18,14 +18,6 @@ const currentYear = new Date().getFullYear();
           </a>
         ))
       }
-      <!-- Hi! -->
-      <!-- Feel free to remove the below link or keep it to share your love for this theme! -->
-      <a
-        href="https://github.com/djsiddz/space-ahead"
-        title="Download Space Ahead ✨ Astro Theme"
-        target="_blank">Download Theme</a
-      >
-      <!-- Thank you! -->
     </div>
   </div>
   <div
@@ -34,15 +26,6 @@ const currentYear = new Date().getFullYear();
     <div class="flex flex-row gap-2 items-center justify-start text-balance">
       <span>&copy; {currentYear}</span>
       {siteConfig.title}. All rights reserved.
-    </div>
-    <div class="flex flex-row gap-4 items-center justify-end-safe">
-      {
-        siteConfig.socialLinks?.map((link) => (
-          <a href={link.href} title={link.text} target="_blank">
-            {link.text}
-          </a>
-        ))
-      }
     </div>
   </div>
   <div
