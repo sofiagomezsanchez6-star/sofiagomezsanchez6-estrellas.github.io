@@ -46,7 +46,7 @@ export type SiteConfig = {
 
 const siteConfig: SiteConfig = {
     website: 'https://sofiagomezsanchez6-estrellas.github.io',
-    title: 'Melany Gomez',
+    title: 'Portafolio DB1',
     description: 'Sitio de Melany Gómez: presentación del proyecto y evidencias de modelado, normalización, SQL y proyecto.',
     headerNavLinks: [
         {
