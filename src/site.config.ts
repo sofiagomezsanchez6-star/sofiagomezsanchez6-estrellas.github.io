@@ -46,8 +46,8 @@ export type SiteConfig = {
 
 const siteConfig: SiteConfig = {
     website: 'https://sofiagomezsanchez6-estrellas.github.io',
-    title: 'Space Ahead',
-    description: 'Sitio de Sofía Gómez Sánchez: presentación del proyecto y evidencias de modelado, normalización, SQL y proyecto.',
+    title: 'Melany Gomez',
+    description: 'Sitio de Melany Gómez: presentación del proyecto y evidencias de modelado, normalización, SQL y proyecto.',
     headerNavLinks: [
         {
             text: 'Home',
