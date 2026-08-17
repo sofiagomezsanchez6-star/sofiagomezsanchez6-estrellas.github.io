@@ -99,8 +99,8 @@ const siteConfig: SiteConfig = {
         title: 'Presentación',
         text: 'Hola, soy Melany Gómez. En este video encontraras una breve presentación sobre mi. ',
         // Reemplaza esta URL por el enlace "embed" de tu video (YouTube, Drive, etc.)
-        videoUrl: 'https://youtube.com/shorts/fk6bZp2jXLY',
-        avatar: {
+            videoUrl: 'https://www.youtube.com/embed/fk6bZp2jXLY',
+            avatar: {
             src: '/assets/images/sofia.jpg',
             alt: 'Foto de perfil de Melany Gómez'
         }
