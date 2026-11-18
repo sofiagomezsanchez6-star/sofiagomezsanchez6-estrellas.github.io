@@ -1,0 +1,29 @@
+---
+type Props = {
+  code: string;
+  label?: string;
+};
+
+const { code, label } = Astro.props;
+---
+
+<div class="code-block w-full text-left">
+  {label && <span class="kanit-light text-xs uppercase opacity-70">{label}</span>}
+  <pre
+    class="mt-1 overflow-x-auto rounded-2xl border border-space-red/40 p-4 text-xs leading-relaxed sm:text-sm dark:border-space-yellow/40"><code>{code}</code></pre>
+</div>
+
+<style>
+  pre {
+    font-family:
+      ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono",
+      monospace;
+    white-space: pre;
+  }
+  html.light pre {
+    background-color: rgba(255, 255, 255, 0.55);
+  }
+  html.dark pre {
+    background-color: rgba(0, 0, 0, 0.35);
+  }
+</style>

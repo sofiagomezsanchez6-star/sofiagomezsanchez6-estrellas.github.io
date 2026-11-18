@@ -1,0 +1,64 @@
+---
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+export type GalleryItem = {
+  src: ImageMetadata;
+  alt: string;
+  caption?: string;
+};
+
+type Props = {
+  items: GalleryItem[];
+  columns?: 1 | 2;
+};
+
+const { items, columns = 2 } = Astro.props;
+---
+
+<div
+  class:list={[
+    "grid w-full grid-cols-1 gap-6 text-left mt-4 mb-10",
+    columns === 2 && "sm:grid-cols-2",
+  ]}
+>
+  {
+    items.map((item) => (
+      <figure class="evidencia-figure rounded-2xl border border-space-red/40 p-3 dark:border-space-yellow/40">
+        <a
+          href={item.src.src}
+          target="_blank"
+          rel="noopener"
+          data-no-swup
+          title="Abrir imagen en tamaño completo"
+        >
+          <Image
+            src={item.src}
+            alt={item.alt}
+            widths={columns === 2 ? [480, 960] : [720, 1440]}
+            sizes={
+              columns === 2
+                ? "(min-width: 640px) 360px, 100vw"
+                : "(min-width: 768px) 720px, 100vw"
+            }
+            class="w-full bg-white"
+          />
+        </a>
+        {item.caption && (
+          <figcaption class="kanit-light mt-2 text-sm opacity-80">
+            {item.caption}
+          </figcaption>
+        )}
+      </figure>
+    ))
+  }
+</div>
+
+<style>
+  .evidencia-figure {
+    transition: transform 0.15s ease;
+  }
+  .evidencia-figure:hover {
+    transform: translateY(-2px);
+  }
+</style>

@@ -2,6 +2,19 @@
 import MainLayout from "../../layouts/MainLayout.astro";
 import siteConfig from "../../site.config";
 import { withBase } from "../../utils/helpers";
+import EvidenceGallery from "../../components/EvidenceGallery.astro";
+import DownloadList from "../../components/DownloadList.astro";
+import { apuntes, proyecto } from "../../data/evidencias";
+
+const relaciones = [
+  ["1:1", "Dirigir: cada SUCURSAL la dirige un único ADMINISTRADOR."],
+  ["1:N", "Realizar, Generar, Gestionar y Pagar: un CLIENTE, una SUCURSAL, un VENDEDOR o un MÉTODO DE PAGO se asocian con muchas VENTAS."],
+  ["M:N", "Registrar (SUCURSAL–PRODUCTO, el inventario) y Vender (VENTA–PRODUCTO, el detalle de venta)."],
+  ["Ternaria", "Suministrar: PROVEEDOR, PRODUCTO y SUCURSAL, con precio y tiempo de entrega."],
+  ["Agregación", "CALIDAD: los ADMINISTRADORES elaboran EVALUACIONES sobre cada suministro."],
+  ["Recursiva", "Contener: una CATEGORÍA principal agrupa subcategorías."],
+  ["Especialización", "EMPLEADO en ADMINISTRADOR o VENDEDOR, y CLIENTE en NATURAL o JURÍDICO (disjunta y total)."],
+];
 ---
 
 <MainLayout activePage="evidencias" pageTitle={siteConfig.title + " | Evidencias · Modelado"}>
@@ -9,27 +22,93 @@ import { withBase } from "../../utils/helpers";
     <a href={withBase("/evidencias")} class="kanit-light text-sm">&larr; Volver a Evidencias</a>
     <h1 class="sigmar-ff text-balance">Modelado</h1>
     <p class="kanit-light text-balance">
-      Próximamente: diagrama entidad-relación, modelo lógico y demás evidencias
-      del modelado de la base de datos.
+      Modelo entidad-relación (MER) y modelo relacional (MR) del proyecto final:
+      un sistema de información para una cadena de ferreterías, junto con los
+      apuntes de clase sobre modelado.
     </p>
-    <div class="placeholder-box kanit-light">
-      Esta sección está vacía por ahora. Agrega aquí tus imágenes, capturas o
-      archivos (por ejemplo con el componente <code>&lt;Image /&gt;</code> de Astro)
-      cuando tengas listas tus evidencias.
+
+    <div class="w-full text-left">
+      <h2 class="sigmar-ff">Modelo entidad-relación (Chen)</h2>
+      <p class="kanit-light">
+        El MER parte de las reglas de negocio de la ferretería y cubre todos los
+        tipos de relación pedidos en el proyecto:
+      </p>
+      <ul class="kanit-light mb-6 flex flex-col gap-2">
+        {
+          relaciones.map(([tipo, texto]) => (
+            <li>
+              <span class="kanit-regular text-space-red dark:text-space-yellow">{tipo}.</span>{" "}
+              {texto}
+            </li>
+          ))
+        }
+      </ul>
+      <EvidenceGallery
+        columns={1}
+        items={[
+          {
+            src: proyecto("mer-chen"),
+            alt: "Modelo entidad-relación en notación Chen del sistema de ferreterías",
+            caption: "MER en notación Chen, con la agregación CALIDAD sobre la relación ternaria Suministrar.",
+          },
+        ]}
+      />
+
+      <h2 class="sigmar-ff">Transformación al modelo relacional</h2>
+      <p class="kanit-light">
+        Cada entidad, relación M:N, relación ternaria, atributo multivaluado y
+        especialización se transforma en tablas; el resultado son 22 tablas
+        finales con sus llaves primarias y foráneas.
+      </p>
+      <EvidenceGallery
+        columns={1}
+        items={[
+          {
+            src: proyecto("transformacion"),
+            alt: "Transformación del MER al modelo relacional con la lista de tablas finales",
+            caption: "Transformación del MER: cardinalidades por relación y lista de las 22 tablas finales.",
+          },
+        ]}
+      />
+
+      <h2 class="sigmar-ff">Modelo lógico y relacional (Data Modeler)</h2>
+      <p class="kanit-light">
+        El modelo se construyó en Oracle SQL Developer Data Modeler en notación
+        pata de gallina: primero el modelo lógico y luego el modelo relacional
+        con tipos de datos, llaves y restricciones.
+      </p>
+      <EvidenceGallery
+        columns={1}
+        items={[
+          {
+            src: proyecto("modelo-logico"),
+            alt: "Modelo lógico en Data Modeler",
+            caption: "Modelo lógico (entidades, atributos y relaciones).",
+          },
+          {
+            src: proyecto("modelo-relacional"),
+            alt: "Modelo relacional en Data Modeler",
+            caption: "Modelo relacional con columnas, tipos de dato, PK y FK.",
+          },
+        ]}
+      />
+
+      <h2 class="sigmar-ff">Archivos del modelo</h2>
+      <DownloadList
+        items={[
+          { text: "MER en notación Chen", file: "mer-chen.drawio", description: "Diagrama editable en draw.io." },
+          { text: "Transformación MER → MR", file: "transformacion.drawio", description: "Diagrama editable en draw.io." },
+          { text: "Modelos MER y MR (Data Modeler)", file: "mer-mr-datamodeler.zip", description: "Proyecto de Oracle SQL Developer Data Modeler." },
+          { text: "Diccionario de datos", file: "diccionario-de-datos.zip", description: "Reporte HTML de todas las tablas generado con Data Modeler." },
+        ]}
+      />
+
+      <h2 class="sigmar-ff">Apuntes de clase</h2>
+      <p class="kanit-light">
+        Ejercicios de modelo entidad-relación: cardinalidades, entidades
+        débiles, generalización, especialización y agregación.
+      </p>
+      <EvidenceGallery items={apuntes("mer")} />
     </div>
   </div>
 </MainLayout>
-
-<style>
-  .placeholder-box {
-    margin-top: 2rem;
-    border: 2px dashed var(--space-red);
-    border-radius: 1rem;
-    padding: 2rem;
-    text-align: left;
-    opacity: 0.8;
-  }
-  html.dark .placeholder-box {
-    border-color: var(--space-yellow);
-  }
-</style>

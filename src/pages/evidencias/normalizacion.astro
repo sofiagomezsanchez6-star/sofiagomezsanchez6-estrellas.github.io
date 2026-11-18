@@ -2,6 +2,82 @@
 import MainLayout from "../../layouts/MainLayout.astro";
 import siteConfig from "../../site.config";
 import { withBase } from "../../utils/helpers";
+import EvidenceGallery from "../../components/EvidenceGallery.astro";
+import DownloadList from "../../components/DownloadList.astro";
+import { apuntes } from "../../data/evidencias";
+import { tablasFinales } from "../../data/esquema";
+
+const primeraFN = [
+  {
+    antes: "EMPLEADO",
+    problema: "Nombre_Completo no es atómico y Telefono repite valores en una misma fila.",
+    resultado: "Nombre_Completo se divide en Nombre y Apellido; los teléfonos pasan a TELEFONO_EMPLEADO.",
+  },
+  {
+    antes: "CLIENTE_NATURAL",
+    problema: "Nombre_Completo no es atómico.",
+    resultado: "El nombre se divide en Nombre y Apellido.",
+  },
+  {
+    antes: "PROVEEDOR",
+    problema: "Un proveedor tiene varios teléfonos y varios correos.",
+    resultado: "Se crean TELEFONO_PROVEEDOR y CORREO_PROVEEDOR.",
+  },
+  {
+    antes: "CLIENTE",
+    problema: "Un cliente tiene varios teléfonos y varios correos.",
+    resultado: "Se crean TELEFONO_CLIENTE y CORREO_CLIENTE.",
+  },
+];
+
+const segundaFN = [
+  {
+    relacion: "INVENTARIO",
+    df: "Id_Sucursal, Id_Producto → Cantidad_Disponible, Ubicacion_Bodega",
+    analisis: "Cumple. La cantidad y la ubicación son de ese producto en esa sede; ninguna depende solo de la sede o solo del producto.",
+  },
+  {
+    relacion: "SUMINISTRO",
+    df: "Nit, Id_Producto, Id_Sucursal → Precio_Suministro, Tiempo_Entrega_Dias",
+    analisis: "Cumple. El precio y el tiempo se pactan con un proveedor para un producto en una sede.",
+  },
+  {
+    relacion: "DETALLE_VENTA",
+    df: "Id_Venta, Id_Producto → Cantidad, Precio_Unitario",
+    analisis: "Cumple. Precio_Unitario es el precio cobrado en esa venta, no el precio base del producto, que está en PRODUCTO.",
+  },
+  {
+    relacion: "Tablas de teléfonos y correos",
+    df: "Todas sus columnas forman la llave",
+    analisis: "Cumplen. No tienen atributos fuera de la llave.",
+  },
+  {
+    relacion: "Las 14 relaciones restantes",
+    df: "Llave de una sola columna",
+    analisis: "Cumplen. Con una llave simple no puede haber dependencias parciales.",
+  },
+];
+
+const terceraFN = [
+  {
+    antes: "PRODUCTO.Stock",
+    explicacion: "Stock es la suma de Cantidad_Disponible en INVENTARIO. Se elimina de la tabla y se calcula con la vista V_PRODUCTO_STOCK.",
+  },
+  {
+    antes: "VENTA.Monto_Total",
+    explicacion: "Monto_Total es la suma de Cantidad × Precio_Unitario en DETALLE_VENTA. Se elimina de la tabla y se calcula con la vista V_VENTA_TOTAL.",
+  },
+  {
+    antes: "VENTA.Id_Sucursal",
+    explicacion: "No depende de la sede actual del vendedor: si lo trasladan, la venta sigue en la sede donde ocurrió, así que es un dato propio de la venta.",
+  },
+  {
+    antes: "Llaves candidatas",
+    explicacion: "Nombre_Sucursal, Documento, Correo y Numero_Documento son UNIQUE: lo que depende de ellas no es una dependencia transitiva.",
+  },
+];
+
+const tablas = tablasFinales();
 ---
 
 <MainLayout activePage="evidencias" pageTitle={siteConfig.title + " | Evidencias · Normalización"}>
@@ -9,26 +85,160 @@ import { withBase } from "../../utils/helpers";
     <a href={withBase("/evidencias")} class="kanit-light text-sm">&larr; Volver a Evidencias</a>
     <h1 class="sigmar-ff text-balance">Normalización</h1>
     <p class="kanit-light text-balance">
-      Próximamente: evidencias del proceso de normalización (1FN, 2FN, 3FN...)
-      aplicado a la base de datos del proyecto.
+      Normalización hasta tercera forma normal (3FN) del modelo relacional que
+      sale del MER del proyecto, y apuntes de clase sobre dependencias
+      funcionales.
     </p>
-    <div class="placeholder-box kanit-light">
-      Esta sección está vacía por ahora. Agrega aquí tus imágenes, capturas o
-      archivos cuando tengas listas tus evidencias.
+
+    <div class="w-full text-left">
+      <h2 class="sigmar-ff">Primera forma normal (1FN)</h2>
+      <p class="kanit-light">
+        Cada columna guarda un solo valor atómico y no hay grupos repetidos. Los
+        nombres compuestos se dividen y cada atributo multivaluado pasa a su
+        propia tabla, con la llave de la entidad y el valor como llave
+        compuesta.
+      </p>
+      <div class="tabla-wrapper">
+        <table>
+          <thead>
+            <tr><th>Relación</th><th>Problema</th><th>Resultado</th></tr>
+          </thead>
+          <tbody>
+            {primeraFN.map((r) => (
+              <tr><td class="kanit-regular">{r.antes}</td><td>{r.problema}</td><td>{r.resultado}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <h2 class="sigmar-ff">Segunda forma normal (2FN)</h2>
+      <p class="kanit-light">
+        Estar en 1FN y que todo atributo que no es llave dependa de la llave
+        completa. Solo las relaciones con llave compuesta pueden incumplirla;
+        ninguna necesitó cambios.
+      </p>
+      <div class="tabla-wrapper">
+        <table>
+          <thead>
+            <tr><th>Relación</th><th>Dependencia funcional</th><th>Análisis</th></tr>
+          </thead>
+          <tbody>
+            {segundaFN.map((r) => (
+              <tr><td class="kanit-regular">{r.relacion}</td><td><code>{r.df}</code></td><td>{r.analisis}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <h2 class="sigmar-ff">Tercera forma normal (3FN)</h2>
+      <p class="kanit-light">
+        Estar en 2FN y que ningún atributo que no es llave dependa de otro
+        atributo que tampoco es llave. Los atributos derivados se quitan de las
+        tablas y se calculan con vistas.
+      </p>
+      <div class="tabla-wrapper">
+        <table>
+          <thead>
+            <tr><th>Atributo o dependencia</th><th>Decisión</th></tr>
+          </thead>
+          <tbody>
+            {terceraFN.map((r) => (
+              <tr><td class="kanit-regular">{r.antes}</td><td>{r.explicacion}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <h2 class="sigmar-ff">Tablas finales (3FN)</h2>
+      <p class="kanit-light">
+        Las {tablas.length} tablas que quedan después de normalizar, tal como se
+        crean en MySQL. <span class="badge">PK</span> llave primaria,
+        <span class="badge">FK</span> llave foránea.
+      </p>
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 mb-10">
+        {
+          tablas.map((t) => (
+            <div class="rounded-2xl border border-space-red/40 px-4 py-3 dark:border-space-yellow/40">
+              <h3 class="kanit-bold mb-2 text-sm">{t.nombre}</h3>
+              <ul class="kanit-light flex flex-col gap-0.5 text-xs">
+                {t.columnas.map((c) => (
+                  <li class="flex items-center justify-between gap-2">
+                    <span class:list={[c.pk && "kanit-regular underline"]}>{c.nombre}</span>
+                    <span class="flex shrink-0 items-center gap-1 opacity-80">
+                      {c.pk && <span class="badge">PK</span>}
+                      {c.fk && <span class="badge">FK</span>}
+                      <span>{c.tipo}</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+
+      <h2 class="sigmar-ff">Archivo de normalización</h2>
+      <DownloadList
+        items={[
+          {
+            text: "Normalización del modelo",
+            file: "normalizacion.xlsx",
+            description: "Modelo de partida, 1FN, 2FN, 3FN y tablas finales paso a paso.",
+          },
+        ]}
+      />
+
+      <h2 class="sigmar-ff">Apuntes de clase</h2>
+      <p class="kanit-light">
+        Ejercicios de dependencias funcionales con las reglas de inferencia que
+        sustentan la normalización.
+      </p>
+      <EvidenceGallery items={apuntes("normalizacion")} />
     </div>
   </div>
 </MainLayout>
 
 <style>
-  .placeholder-box {
-    margin-top: 2rem;
-    border: 2px dashed var(--space-red);
-    border-radius: 1rem;
-    padding: 2rem;
-    text-align: left;
-    opacity: 0.8;
+  .tabla-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    margin-bottom: 2.5rem;
   }
-  html.dark .placeholder-box {
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    font-family: "Kanit", sans-serif;
+    font-weight: 300;
+  }
+  th {
+    font-weight: 400;
+    text-align: left;
+    border-bottom: 2px solid var(--space-red);
+    padding: 0.5rem 0.75rem;
+  }
+  td {
+    vertical-align: top;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid rgba(144, 57, 58, 0.25);
+  }
+  html.dark th {
+    border-bottom-color: var(--space-yellow);
+  }
+  html.dark td {
+    border-bottom-color: rgba(255, 255, 133, 0.2);
+  }
+  .badge {
+    display: inline-block;
+    border-radius: 9999px;
+    border: 1px solid var(--space-red);
+    color: var(--space-red);
+    padding: 0 0.4rem;
+    font-size: 0.65rem;
+    line-height: 1.2rem;
+  }
+  html.dark .badge {
     border-color: var(--space-yellow);
+    color: var(--space-yellow);
   }
 </style>

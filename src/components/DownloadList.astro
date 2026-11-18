@@ -1,0 +1,72 @@
+---
+import ArrowRight from "../icons/ArrowRight.astro";
+import { withBase } from "../utils/helpers";
+
+export type DownloadItem = {
+  text: string;
+  /** Nombre del archivo dentro de public/evidencias/descargas, o URL externa */
+  file: string;
+  description?: string;
+};
+
+type Props = {
+  items: DownloadItem[];
+};
+
+const { items } = Astro.props;
+
+const isExternal = (file: string) => /^https?:\/\//.test(file);
+const extOf = (file: string) =>
+  isExternal(file) ? "enlace" : file.split(".").pop()?.toLowerCase();
+---
+
+<nav class="flex w-full flex-col gap-3 text-left mt-4 mb-10">
+  {
+    items.map((item) => (
+      <a
+        href={
+          isExternal(item.file)
+            ? item.file
+            : withBase(`/evidencias/descargas/${item.file}`)
+        }
+        {...(isExternal(item.file)
+          ? { target: "_blank", rel: "noopener" }
+          : { download: "" })}
+        data-no-swup
+        class="descarga-item flex items-center justify-between gap-4 rounded-2xl border border-space-red/40 px-5 py-3 dark:border-space-yellow/40"
+      >
+        <div>
+          <span class="kanit-regular">{item.text}</span>
+          {item.description && (
+            <p class="kanit-light mt-0.5 mb-0! text-sm opacity-80">
+              {item.description}
+            </p>
+          )}
+        </div>
+        <span class="flex shrink-0 items-center gap-2">
+          <span class="tag kanit-light rounded-full border border-gray-500 px-2 py-0 text-xs uppercase">
+            {extOf(item.file)}
+          </span>
+          <ArrowRight class="h-4 w-4 fill-current" />
+        </span>
+      </a>
+    ))
+  }
+</nav>
+
+<style>
+  .descarga-item {
+    transition:
+      transform 0.15s ease,
+      background-color 0.15s ease;
+  }
+  .descarga-item:hover {
+    transform: translateX(4px);
+  }
+  html.light .descarga-item:hover {
+    background-color: rgba(144, 57, 58, 0.06);
+  }
+  html.dark .descarga-item:hover {
+    background-color: rgba(255, 255, 133, 0.06);
+  }
+</style>

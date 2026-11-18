@@ -1,0 +1,197 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+import siteConfig from "../../site.config";
+import { withBase } from "../../utils/helpers";
+import EvidenceGallery from "../../components/EvidenceGallery.astro";
+import DownloadList from "../../components/DownloadList.astro";
+import CodeBlock from "../../components/CodeBlock.astro";
+import { apuntes } from "../../data/evidencias";
+import secciones from "../../data/consultas-algebra.json";
+
+type Ejercicio = {
+  n: number;
+  title: string;
+  /** Expresiones con subíndices ya escapadas (<sub>) extraídas del documento del proyecto */
+  ar: string[];
+  sql: string;
+  table: string[][] | null;
+  note: string;
+};
+
+const total = secciones.reduce((acc, s) => acc + s.exercises.length, 0);
+
+const operadores = [
+  ["σ", "Selección", "filas que cumplen una condición"],
+  ["π", "Proyección", "columnas, sin tuplas repetidas"],
+  ["ρ", "Renombrar", "cambia el nombre de una relación o sus columnas"],
+  ["×", "Producto cartesiano", "todas las combinaciones de tuplas"],
+  ["⋈", "Reunión (join)", "combina tuplas que cumplen una condición"],
+  ["∪ ∩ −", "Unión, intersección, diferencia", "operaciones de conjuntos"],
+  ["÷", "División", "lo que se relaciona con todas las tuplas de otra relación"],
+  ["γ", "Agregación", "agrupa y calcula count, sum, avg, min, max"],
+];
+---
+
+<MainLayout activePage="evidencias" pageTitle={siteConfig.title + " | Evidencias · Álgebra relacional"}>
+  <div class="page-content">
+    <a href={withBase("/evidencias")} class="kanit-light text-sm">&larr; Volver a Evidencias</a>
+    <h1 class="sigmar-ff text-balance">Álgebra relacional</h1>
+    <p class="kanit-light text-balance">
+      {total} consultas del proyecto expresadas en álgebra relacional, cada una
+      con su SQL equivalente y el resultado sobre los datos de prueba, además de
+      los apuntes de clase.
+    </p>
+
+    <div class="w-full text-left">
+      <h2 class="sigmar-ff">Operadores</h2>
+      <div class="tabla-wrapper">
+        <table>
+          <tbody>
+            {operadores.map(([simbolo, nombre, desc]) => (
+              <tr>
+                <td class="simbolo">{simbolo}</td>
+                <td class="kanit-regular">{nombre}</td>
+                <td>{desc}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <h2 class="sigmar-ff">Consultas del proyecto</h2>
+      <p class="kanit-light">
+        Las consultas se ejecutaron en MySQL sobre una base recién creada con los
+        scripts de creación y siembra del proyecto. Toca cada ejercicio para ver
+        su expresión, el SQL y el resultado. La división se escribe en SQL con
+        dos <code>NOT EXISTS</code> anidados, porque SQL no tiene un operador de
+        división.
+      </p>
+
+      {
+        secciones.map((seccion) => (
+          <section class="mb-8">
+            <h3 class="kanit-bold mb-3 text-lg">{seccion.title}</h3>
+            <div class="flex flex-col gap-3">
+              {(seccion.exercises as Ejercicio[]).map((ej) => (
+                <details class="ejercicio rounded-2xl border border-space-red/40 px-5 py-3 dark:border-space-yellow/40">
+                  <summary class="kanit-regular cursor-pointer">
+                    <span class="opacity-70">Ejercicio {ej.n}.</span> {ej.title}
+                  </summary>
+                  <div class="mt-4 flex flex-col gap-4">
+                    <div>
+                      <span class="kanit-light text-xs uppercase opacity-70">Álgebra relacional</span>
+                      <div class="expresion mt-1 flex flex-col gap-1">
+                        {ej.ar.map((linea) => <p class="mb-0!" set:html={linea} />)}
+                      </div>
+                    </div>
+                    <CodeBlock label="SQL" code={ej.sql} />
+                    {ej.table && (
+                      <div>
+                        <span class="kanit-light text-xs uppercase opacity-70">Resultado</span>
+                        <div class="tabla-wrapper mt-1 mb-1!">
+                          <table>
+                            <thead>
+                              <tr>{ej.table[0].map((h) => <th>{h}</th>)}</tr>
+                            </thead>
+                            <tbody>
+                              {ej.table.slice(1).map((fila) => (
+                                <tr>{fila.map((c) => <td>{c}</td>)}</tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                        {ej.note && <p class="kanit-light mb-0! text-xs opacity-70">{ej.note}</p>}
+                      </div>
+                    )}
+                  </div>
+                </details>
+              ))}
+            </div>
+          </section>
+        ))
+      }
+
+      <h2 class="sigmar-ff">Archivos</h2>
+      <DownloadList
+        items={[
+          {
+            text: "Documento de álgebra relacional",
+            file: "algebra-relacional.docx",
+            description: "Las 60 consultas con su expresión, SQL y resultado esperado.",
+          },
+          {
+            text: "Script de consultas",
+            file: "03_consultas.sql",
+            description: "Las mismas 60 consultas listas para ejecutar en MySQL.",
+          },
+        ]}
+      />
+
+      <h2 class="sigmar-ff">Apuntes de clase</h2>
+      <p class="kanit-light">
+        Operadores básicos y especializados, joins, división y agregación, con
+        ejercicios resueltos a mano.
+      </p>
+      <EvidenceGallery items={apuntes("algebra")} />
+    </div>
+  </div>
+</MainLayout>
+
+<style>
+  .ejercicio summary {
+    list-style: none;
+  }
+  .ejercicio summary::-webkit-details-marker {
+    display: none;
+  }
+  .ejercicio summary::before {
+    content: "+";
+    display: inline-block;
+    width: 1.25rem;
+    font-weight: 700;
+  }
+  .ejercicio[open] summary::before {
+    content: "−";
+  }
+  .expresion {
+    font-family: "Cambria Math", "STIX Two Math", "Times New Roman", serif;
+    font-size: 1rem;
+    line-height: 1.6;
+    overflow-x: auto;
+  }
+  .simbolo {
+    font-family: "Cambria Math", "STIX Two Math", "Times New Roman", serif;
+    font-size: 1.15rem;
+    white-space: nowrap;
+  }
+  .tabla-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    margin-bottom: 2.5rem;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+    font-family: "Kanit", sans-serif;
+    font-weight: 300;
+  }
+  th {
+    font-weight: 400;
+    text-align: left;
+    border-bottom: 2px solid var(--space-red);
+    padding: 0.35rem 0.6rem;
+    white-space: nowrap;
+  }
+  td {
+    vertical-align: top;
+    padding: 0.35rem 0.6rem;
+    border-bottom: 1px solid rgba(144, 57, 58, 0.25);
+  }
+  html.dark th {
+    border-bottom-color: var(--space-yellow);
+  }
+  html.dark td {
+    border-bottom-color: rgba(255, 255, 133, 0.2);
+  }
+</style>

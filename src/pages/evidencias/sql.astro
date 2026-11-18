@@ -2,6 +2,31 @@
 import MainLayout from "../../layouts/MainLayout.astro";
 import siteConfig from "../../site.config";
 import { withBase } from "../../utils/helpers";
+import EvidenceGallery from "../../components/EvidenceGallery.astro";
+import DownloadList from "../../components/DownloadList.astro";
+import CodeBlock from "../../components/CodeBlock.astro";
+import { apuntes } from "../../data/evidencias";
+import { scriptCreacion, tablasFinales, vistas } from "../../data/esquema";
+
+const repoBack = "https://github.com/GrupoTrabajoBasesUEB/backbases";
+
+const scripts = [
+  {
+    nombre: "01_creacion_tablas.sql",
+    texto: `Crea la base Proyecto_db (utf8mb4_spanish_ci) y las ${tablasFinales().length} tablas con sus llaves primarias, foráneas, restricciones UNIQUE y CHECK, índices y las 2 vistas.`,
+  },
+  {
+    nombre: "02_siembra_datos.sql",
+    texto: "Inserta los datos de prueba: 10 marcas, 14 categorías, 19 productos, 10 métodos de pago, 10 sucursales, 23 empleados, 14 clientes, 173 registros de inventario, 10 proveedores, 142 suministros, 30 evaluaciones y 120 ventas con 241 líneas.",
+  },
+  {
+    nombre: "03_consultas.sql",
+    texto: "Las 60 consultas de álgebra relacional traducidas a SQL. Solo leen datos.",
+  },
+];
+
+const ejemploTabla =
+  scriptCreacion.match(/CREATE TABLE VENTA \([\s\S]*?\) ENGINE=InnoDB;/)?.[0] ?? "";
 ---
 
 <MainLayout activePage="evidencias" pageTitle={siteConfig.title + " | Evidencias · SQL"}>
@@ -9,27 +34,99 @@ import { withBase } from "../../utils/helpers";
     <a href={withBase("/evidencias")} class="kanit-light text-sm">&larr; Volver a Evidencias</a>
     <h1 class="sigmar-ff text-balance">SQL</h1>
     <p class="kanit-light text-balance">
-      Próximamente: scripts de creación de tablas, inserciones y consultas SQL
-      desarrolladas para el proyecto.
+      Scripts de creación de tablas, siembra de datos y consultas SQL del
+      proyecto, implementados en MySQL Community Server 8.4 LTS, y apuntes de
+      clase de sentencias SQL.
     </p>
-    <div class="placeholder-box kanit-light">
-      Esta sección está vacía por ahora. Puedes pegar tus consultas dentro de un
-      bloque <code>&lt;pre&gt;&lt;code&gt;</code> o enlazar tus archivos .sql cuando
-      estén listos.
+
+    <div class="w-full text-left">
+      <h2 class="sigmar-ff">Scripts del proyecto</h2>
+      <p class="kanit-light">
+        Se ejecutan en orden con el cliente <code>mysql</code> o desde la pestaña
+        SQL de phpMyAdmin. Los tres scripts se probaron completos en un esquema
+        de prueba: crean todo sin errores y la siembra respeta las llaves
+        foráneas.
+      </p>
+      <div class="flex flex-col gap-3 mb-10">
+        {
+          scripts.map((s) => (
+            <div class="rounded-2xl border border-space-red/40 px-5 py-3 dark:border-space-yellow/40">
+              <code class="kanit-regular text-sm">{s.nombre}</code>
+              <p class="kanit-light mt-1 mb-0! text-sm opacity-80">{s.texto}</p>
+            </div>
+          ))
+        }
+      </div>
+
+      <h2 class="sigmar-ff">Creación de tablas (DDL)</h2>
+      <p class="kanit-light">
+        Ejemplo: la tabla VENTA, con sus llaves foráneas hacia CLIENTE,
+        VENDEDOR, SUCURSAL y METODO_PAGO.
+      </p>
+      <CodeBlock code={ejemploTabla} />
+
+      <details class="script rounded-2xl border border-space-red/40 px-5 py-3 my-6 dark:border-space-yellow/40">
+        <summary class="kanit-regular cursor-pointer">Ver el script completo de creación</summary>
+        <div class="mt-4">
+          <CodeBlock code={scriptCreacion} />
+        </div>
+      </details>
+
+      <h2 class="sigmar-ff">Vistas</h2>
+      <p class="kanit-light">
+        El stock de cada producto y el monto total de cada venta no se guardan
+        en las tablas (3FN): se calculan con estas vistas.
+      </p>
+      <div class="flex flex-col gap-4 mb-10">
+        {vistas.map((v) => <CodeBlock code={v} />)}
+      </div>
+
+      <h2 class="sigmar-ff">Consultas</h2>
+      <p class="kanit-light">
+        Las 60 consultas del proyecto, con su expresión en álgebra relacional,
+        el SQL y el resultado, están en la sección
+        <a href={withBase("/evidencias/algebra-relacional")} class="underline">Álgebra relacional</a>.
+        Cubren selección, joins, unión, intersección (<code>INTERSECT</code>),
+        diferencia (<code>EXCEPT</code>), división con <code>NOT EXISTS</code>,
+        agregación con <code>GROUP BY</code> y <code>HAVING</code>, y reuniones
+        externas.
+      </p>
+
+      <h2 class="sigmar-ff">Archivos</h2>
+      <DownloadList
+        items={[
+          { text: "Script de creación de tablas", file: "01_creacion_tablas.sql" },
+          { text: "Script de siembra de datos", file: `${repoBack}/blob/main/sql/02_siembra_datos.sql`, description: "En el repositorio del back del proyecto." },
+          { text: "Script de consultas", file: "03_consultas.sql" },
+          { text: "Repositorio del back", file: repoBack, description: "Carpeta sql/ con los scripts y su README." },
+        ]}
+      />
+
+      <h2 class="sigmar-ff">Apuntes de clase</h2>
+      <p class="kanit-light">
+        Apuntes de las diapositivas de SQL: consultas básicas, funciones de una
+        fila, conversión de tipos, funciones de grupo, joins, subconsultas y
+        operadores de conjuntos.
+      </p>
+      <EvidenceGallery items={apuntes("sql")} />
     </div>
   </div>
 </MainLayout>
 
 <style>
-  .placeholder-box {
-    margin-top: 2rem;
-    border: 2px dashed var(--space-red);
-    border-radius: 1rem;
-    padding: 2rem;
-    text-align: left;
-    opacity: 0.8;
+  .script summary {
+    list-style: none;
   }
-  html.dark .placeholder-box {
-    border-color: var(--space-yellow);
+  .script summary::-webkit-details-marker {
+    display: none;
+  }
+  .script summary::before {
+    content: "+";
+    display: inline-block;
+    width: 1.25rem;
+    font-weight: 700;
+  }
+  .script[open] summary::before {
+    content: "−";
   }
 </style>

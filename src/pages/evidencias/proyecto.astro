@@ -2,6 +2,63 @@
 import MainLayout from "../../layouts/MainLayout.astro";
 import siteConfig from "../../site.config";
 import { withBase } from "../../utils/helpers";
+import Button from "../../components/Button.astro";
+import EvidenceGallery from "../../components/EvidenceGallery.astro";
+import DownloadList from "../../components/DownloadList.astro";
+import { proyecto } from "../../data/evidencias";
+
+const integrantes = [
+  "Sergio Enrique Caballero Neira",
+  "Melany Sofía Gómez Sánchez",
+  "Shelssy Yisell Ortiz Osorio",
+];
+
+const enlaces = [
+  { text: "Aplicación desplegada", href: "https://ferreteria.serbux.qzz.io" },
+  { text: "Repositorio front", href: "https://github.com/sergio-enrique-caballero-neira/FrontBasesDeDatos1" },
+  { text: "Repositorio back", href: "https://github.com/GrupoTrabajoBasesUEB/backbases" },
+];
+
+const objetivos = [
+  "Modelar el negocio con un MER de al menos 8 entidades con relaciones 1:1, 1:N, M:N y una ternaria, y transformarlo al modelo relacional.",
+  "Normalizar hasta 3FN el modelo relacional que sale del MER.",
+  "Implementar el esquema en MySQL sobre una máquina virtual Linux, con scripts de creación, siembra y consultas.",
+  "Expresar al menos 50 consultas en álgebra relacional y en SQL sobre los datos sembrados.",
+  "Construir una aplicación web que registre y consulte la información según el rol y el nivel de acceso de cada empleado.",
+];
+
+const arquitectura = [
+  ["Front", "Angular 22 con Bootstrap 5.3", "Cloudflare Workers, con despliegue automático en cada push a main"],
+  ["Back", "Spring Boot 4.1.2 sobre Java 21 (WAR)", "Azure App Service con Apache Tomcat 11, desplegado con GitHub Actions"],
+  ["Base de datos", "MySQL Community Server 8.4.13", "Máquina virtual Debian 13 en Azure sin IP pública, publicada a través de NetBird"],
+];
+
+const documentos = {
+  gestion: [
+    { text: "Acta de constitución", file: "acta-de-constitucion.docx" },
+    { text: "Propuesta del proyecto", file: "propuesta-del-proyecto.docx" },
+    { text: "Contexto del negocio", file: "contexto-del-negocio.docx" },
+    { text: "Documento de supuestos", file: "documento-de-supuestos.docx" },
+    { text: "Matriz de requerimientos", file: "matriz-de-requerimientos.xlsx" },
+    { text: "Identificación de interesados", file: "identificacion-de-interesados.docx" },
+    { text: "Roles y responsabilidades", file: "roles-y-responsabilidades.xlsx" },
+    { text: "EDT", file: "edt.docx" },
+    { text: "Cronograma", file: "cronograma.docx" },
+    { text: "Presupuesto", file: "presupuesto.docx" },
+    { text: "Acta de cierre", file: "acta-de-cierre.docx" },
+  ],
+  tecnicos: [
+    { text: "Análisis del sistema operativo", file: "analisis-del-sistema-operativo.docx", description: "Por qué Debian 13 \"trixie\"." },
+    { text: "Análisis del RDBMS", file: "analisis-del-rdbms.docx", description: "Por qué MySQL 8.4 LTS frente a PostgreSQL, MariaDB y Oracle." },
+    { text: "Implementación de las máquinas virtuales", file: "implementacion-de-las-maquinas-virtuales.docx" },
+    { text: "Implementación del RDBMS", file: "implementacion-del-rdbms.docx" },
+    { text: "Conexión de la aplicación web", file: "conexion-de-la-aplicacion-web.docx" },
+    { text: "Diagrama de clases", file: "diagrama-de-clases.drawio", description: "Diagrama editable en draw.io." },
+  ],
+  final: [
+    { text: "Documento final", file: "documento-final.docx", description: "Todos los entregables del proyecto en un solo documento." },
+  ],
+};
 ---
 
 <MainLayout activePage="evidencias" pageTitle={siteConfig.title + " | Evidencias · Proyecto"}>
@@ -9,25 +66,179 @@ import { withBase } from "../../utils/helpers";
     <a href={withBase("/evidencias")} class="kanit-light text-sm">&larr; Volver a Evidencias</a>
     <h1 class="sigmar-ff text-balance">Proyecto</h1>
     <p class="kanit-light text-balance">
-      Próximamente: documentación general y entregable final del proyecto.
+      Sistema de información para una cadena de ferreterías: base de datos
+      relacional en 3FN con una aplicación web conectada, desarrollado en Bases
+      de Datos 1 (periodo 2026-2).
     </p>
-    <div class="placeholder-box kanit-light">
-      Esta sección está vacía por ahora. Agrega aquí un resumen del proyecto,
-      enlaces a repositorios o documentos, y capturas del resultado final.
+
+    <div class="w-full text-left">
+      <div class="flex flex-wrap gap-x-2 gap-y-4 mb-10 text-xs sm:text-base">
+        {
+          enlaces.map((e, i) => (
+            <Button
+              href={e.href}
+              target="_blank"
+              rel="noopener"
+              data-no-swup
+              class={i === 0 ? "space-btn-filled" : "space-btn-outlined"}
+            >
+              {e.text}
+            </Button>
+          ))
+        }
+      </div>
+
+      <h2 class="sigmar-ff">Equipo</h2>
+      <ul class="kanit-light mb-2 flex flex-col gap-1">
+        {integrantes.map((n) => <li>{n}</li>)}
+      </ul>
+      <p class="kanit-light text-sm opacity-80">
+        Docente: Ing. Christian Felipe Duarte Arévalo · Bases de Datos 1 (12998)
+      </p>
+
+      <h2 class="sigmar-ff">Video del proyecto</h2>
+      <div class="video-wrapper mb-10 w-full overflow-hidden rounded-2xl">
+        <iframe
+          src="https://www.youtube.com/embed/tVgtgo7aPho"
+          title="Video del proyecto final"
+          loading="lazy"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen></iframe>
+      </div>
+
+      <h2 class="sigmar-ff">Problemática</h2>
+      <p class="kanit-light">
+        Varias ferreterías de barrio crecieron hasta operar como una cadena con
+        sedes en distintas ciudades, pero siguen llevando ventas, inventario y
+        proveedores en facturas de papel y hojas sueltas. Con ese registro manual
+        no saben cuánto tienen de cada producto en cada sede, no pueden comparar
+        a sus proveedores, liquidan las comisiones a mano y no saben qué sede
+        vende más ni cuánto ganan.
+      </p>
+
+      <h2 class="sigmar-ff">Objetivos</h2>
+      <p class="kanit-light">
+        Diseñar e implementar una base de datos relacional en tercera forma
+        normal, con una aplicación web conectada, que registre las ventas, el
+        inventario por sede, los proveedores y la calidad de sus entregas.
+      </p>
+      <ul class="kanit-light mb-6 flex list-disc flex-col gap-2 pl-5">
+        {objetivos.map((o) => <li>{o}</li>)}
+      </ul>
+
+      <h2 class="sigmar-ff">Arquitectura</h2>
+      <p class="kanit-light">
+        El navegador nunca se conecta a la base: habla solo con el back por
+        HTTPS, y el back es el único que abre conexiones a MySQL.
+      </p>
+      <div class="tabla-wrapper">
+        <table>
+          <thead>
+            <tr><th>Capa</th><th>Tecnología</th><th>Dónde corre</th></tr>
+          </thead>
+          <tbody>
+            {arquitectura.map(([capa, tec, donde]) => (
+              <tr><td class="kanit-regular">{capa}</td><td>{tec}</td><td>{donde}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <h2 class="sigmar-ff">Máquinas virtuales en Azure</h2>
+      <p class="kanit-light">
+        Dos máquinas Debian 13 (Standard B2ats v2, 2 vCPU y 1 GiB de RAM) en
+        México Central: la de base de datos no tiene IP pública y solo se
+        alcanza a través de la máquina de NetBird, en la misma red privada.
+      </p>
+      <EvidenceGallery
+        items={[
+          { src: proyecto("azure-crear-vm"), alt: "Asistente de Azure para crear la máquina virtual", caption: "Asistente de Azure al crear la máquina de base de datos." },
+          { src: proyecto("azure-maquinas"), alt: "Máquinas virtuales e interfaces de red en Azure", caption: "Las dos máquinas virtuales, MySQL-BasesDeDatos y netbird, con sus interfaces de red." },
+          { src: proyecto("azure-ip-discos"), alt: "IP pública y discos en Azure", caption: "IP pública de la máquina de NetBird y discos de sistema de las dos máquinas." },
+          { src: proyecto("azure-red-virtual"), alt: "Red virtual en Azure", caption: "Red virtual vnet-mexicocentral-1, compartida por las dos máquinas." },
+        ]}
+      />
+
+      <h2 class="sigmar-ff">Base de datos en producción</h2>
+      <p class="kanit-light">
+        Capturas de phpMyAdmin sobre la base Proyecto_db en el servidor MySQL
+        8.4.13.
+      </p>
+      <EvidenceGallery
+        columns={1}
+        items={[
+          { src: proyecto("phpmyadmin-tablas"), alt: "Tablas de Proyecto_db en phpMyAdmin", caption: "Las 22 tablas y las 2 vistas de Proyecto_db." },
+          { src: proyecto("phpmyadmin-fk-venta"), alt: "Llaves foráneas de VENTA en phpMyAdmin", caption: "Llaves foráneas de VENTA hacia CLIENTE, METODO_PAGO, SUCURSAL y VENDEDOR, con ON DELETE RESTRICT." },
+          { src: proyecto("phpmyadmin-vista-stock"), alt: "Vista V_PRODUCTO_STOCK en phpMyAdmin", caption: "La vista V_PRODUCTO_STOCK suma el inventario de cada producto en todas las sedes." },
+        ]}
+      />
+
+      <h2 class="sigmar-ff">Diagrama de clases</h2>
+      <p class="kanit-light">
+        Diagrama de clases del back en Spring Boot, separado por paquetes.
+      </p>
+      <EvidenceGallery
+        columns={1}
+        items={Array.from({ length: 11 }, (_, i) => ({
+          src: proyecto(`clases-${String(i + 1).padStart(2, "0")}`),
+          alt: `Diagrama de clases del back, parte ${i + 1}`,
+          caption: `Parte ${i + 1} de 11.`,
+        }))}
+      />
+
+      <h2 class="sigmar-ff">Documentos de gestión</h2>
+      <DownloadList items={documentos.gestion} />
+
+      <h2 class="sigmar-ff">Documentos técnicos</h2>
+      <DownloadList items={documentos.tecnicos} />
+
+      <h2 class="sigmar-ff">Entrega final</h2>
+      <DownloadList items={documentos.final} />
     </div>
   </div>
 </MainLayout>
 
 <style>
-  .placeholder-box {
-    margin-top: 2rem;
-    border: 2px dashed var(--space-red);
-    border-radius: 1rem;
-    padding: 2rem;
-    text-align: left;
-    opacity: 0.8;
+  .video-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* aspect ratio 16:9 */
   }
-  html.dark .placeholder-box {
-    border-color: var(--space-yellow);
+  .video-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+  .tabla-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    margin-bottom: 2.5rem;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    font-family: "Kanit", sans-serif;
+    font-weight: 300;
+  }
+  th {
+    font-weight: 400;
+    text-align: left;
+    border-bottom: 2px solid var(--space-red);
+    padding: 0.5rem 0.75rem;
+  }
+  td {
+    vertical-align: top;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid rgba(144, 57, 58, 0.25);
+  }
+  html.dark th {
+    border-bottom-color: var(--space-yellow);
+  }
+  html.dark td {
+    border-bottom-color: rgba(255, 255, 133, 0.2);
   }
 </style>

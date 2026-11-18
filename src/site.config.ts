@@ -109,22 +109,27 @@ const siteConfig: SiteConfig = {
         {
             text: 'Modelado',
             href: withBase('/evidencias/modelado'),
-            description: 'Diagramas y evidencias del modelado de datos'
+            description: 'MER en notación Chen, transformación y modelo relacional (MR), con apuntes de clase.'
         },
         {
             text: 'Normalización',
             href: withBase('/evidencias/normalizacion'),
-            description: 'Proceso de normalización de la base de datos'
+            description: 'Normalización hasta 3FN, tablas finales y dependencias funcionales.'
+        },
+        {
+            text: 'Álgebra relacional',
+            href: withBase('/evidencias/algebra-relacional'),
+            description: '60 consultas en álgebra relacional con su SQL y resultado, y apuntes de clase.'
         },
         {
             text: 'SQL',
             href: withBase('/evidencias/sql'),
-            description: 'Scripts y consultas SQL desarrolladas para el proyecto.'
+            description: 'Scripts de creación, vistas y consultas en MySQL, y apuntes de sentencias SQL.'
         },
         {
             text: 'Proyecto',
             href: withBase('/evidencias/proyecto'),
-            description: 'Entregable final y documentación general del proyecto.'
+            description: 'Sistema para una cadena de ferreterías: video, arquitectura, infraestructura y documentos.'
         }
     ]
 };
